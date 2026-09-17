@@ -1,0 +1,171 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import type { Employee } from "../types/employee";
+import { getEmployees, deleteEmployee } from "../services/employeeService";
+import Pagination from "./Pagination";
+import EmptyState from "./EmptyState";
+
+
+interface EmployeeTableProps {
+  refreshTrigger: number;
+  searchTerm: string;
+  department: string;
+  role: string;
+  status: string;
+  sortBy: string;
+  sortOrder: string;
+}
+
+function EmployeeTable({
+  refreshTrigger,
+  searchTerm,
+  department,
+  role,
+  status,
+  sortBy,
+  sortOrder,
+}: EmployeeTableProps) {
+  const navigate = useNavigate();
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const employeesPerPage = 10;
+
+ useEffect(() => {
+  getEmployees().then((data) => {
+    setEmployees(data);
+    setLoading(false);
+  });
+}, [refreshTrigger]);
+
+  if (loading) {
+  return <p>Loading employees...</p>;
+}
+
+const filteredEmployees = employees.filter((employee) => {
+const search = searchTerm.toLowerCase().replace(/\s/g, "");
+const fullName = `${employee.firstName} ${employee.lastName}`
+  .toLowerCase()
+  .replace(/\s/g, "");
+
+  return (
+  (
+    fullName.includes(search) ||
+    employee.id.toLowerCase().includes(search) ||
+    employee.email.toLowerCase().includes(search)
+  ) &&
+ (department === "" || employee.department === department) &&
+ (role === "" || employee.role === role) &&
+ (status === "" || employee.status === status)
+);
+});
+
+const sortedEmployees = [...filteredEmployees].sort((a, b) => {
+  if (sortBy === "") {
+    return 0;
+  }
+
+  let valueA = "";
+  let valueB = "";
+
+  if (sortBy === "name") {
+    valueA = `${a.firstName} ${a.lastName}`;
+    valueB = `${b.firstName} ${b.lastName}`;
+  }
+
+  if (sortBy === "joiningDate") {
+    valueA = a.joiningDate;
+    valueB = b.joiningDate;
+  }
+
+  if (sortBy === "department") {
+    valueA = a.department;
+    valueB = b.department;
+  }
+
+  if (sortBy === "status") {
+    valueA = a.status;
+    valueB = b.status;
+  }
+
+  const comparison = valueA.localeCompare(valueB);
+
+  return sortOrder === "Ascending"
+    ? comparison
+    : -comparison;
+});
+
+const startIndex = (currentPage - 1) * employeesPerPage;
+
+const currentEmployees = sortedEmployees.slice(
+  startIndex,
+  startIndex + employeesPerPage
+);
+
+const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
+
+  return (
+   <section id="employees" className="employee-table">
+      <h2>EMPLOYEE DETAILS</h2>
+
+      <div className="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>Department</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Joining Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {currentEmployees.length > 0 ? (
+            currentEmployees.map((employee) => (
+            <tr key={employee.id}>
+              <td>{employee.firstName} {employee.lastName}</td>
+              <td>{employee.department}</td>
+              <td>{employee.role}</td>
+              <td>{employee.status}</td>
+              <td>{employee.joiningDate}</td>
+              <td>
+                <button onClick={() => navigate(`/employees/${employee.id}`)}>View</button>
+                <button onClick={() =>navigate(`/employees/${employee.id}/edit`)}>Edit</button>
+                <button onClick={async () => { 
+                  const confirmed = window.confirm(`Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`);
+                 if (confirmed) {
+                  await deleteEmployee(employee);
+                  
+                  const updatedEmployees = employees.filter((item) => item.id !== employee.id);
+                  setEmployees(updatedEmployees);
+                  const newTotalPages = Math.ceil(updatedEmployees.length / employeesPerPage);
+                  if (currentPage > newTotalPages && newTotalPages > 0) {
+                    setCurrentPage(newTotalPages);
+                  }}
+                  }}>
+                    Delete
+                    </button>
+                      </td>
+                        </tr>
+                        ))
+                      ) : (
+                      <tr>
+                        <td colSpan={6}>
+                          <EmptyState />
+                          </td>
+                          </tr>
+                        )}
+                        </tbody>
+                        </table>
+                        </div>
+                        <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}/>
+                        </section>
+                        );
+                      }
+export default EmployeeTable;
