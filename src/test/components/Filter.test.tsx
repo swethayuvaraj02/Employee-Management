@@ -11,7 +11,6 @@ vi.mock("../../services/employeeService", () => ({
 }));
 
 describe("Filter", () => {
-
   it("should filter employees by department", async () => {
     vi.mocked(getEmployees).mockResolvedValue([
       {
@@ -44,21 +43,16 @@ describe("Filter", () => {
       </MemoryRouter>
     );
 
-    const departmentFilter =
-      screen.getByDisplayValue("All Departments");
-
-    await userEvent.selectOptions(
-      departmentFilter,
-      "Engineering"
+    await userEvent.click(
+      screen.getByRole("button", { name: "All Departments" })
     );
 
-    expect(
-      screen.getByText("Aarav Sharma")
-    ).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Engineering" })
+    );
 
-    expect(
-      screen.queryByText("Priya Iyer")
-    ).not.toBeInTheDocument();
+    expect(screen.getByText("Aarav Sharma")).toBeInTheDocument();
+    expect(screen.queryByText("Priya Iyer")).not.toBeInTheDocument();
   });
 
   it("should filter employees by role", async () => {
@@ -93,21 +87,16 @@ describe("Filter", () => {
       </MemoryRouter>
     );
 
-    const roleFilter =
-      screen.getByDisplayValue("All Roles");
-
-    await userEvent.selectOptions(
-      roleFilter,
-      "Frontend Developer"
+    await userEvent.click(
+      screen.getByRole("button", { name: "All Roles" })
     );
 
-    expect(
-      screen.getByText("Aarav Sharma")
-    ).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Frontend Developer" })
+    );
 
-    expect(
-      screen.queryByText("Priya Iyer")
-    ).not.toBeInTheDocument();
+    expect(screen.getByText("Aarav Sharma")).toBeInTheDocument();
+    expect(screen.queryByText("Priya Iyer")).not.toBeInTheDocument();
   });
 
   it("should filter employees by status", async () => {
@@ -142,24 +131,19 @@ describe("Filter", () => {
       </MemoryRouter>
     );
 
-    const statusFilter =
-      screen.getByDisplayValue("All Status");
-
-    await userEvent.selectOptions(
-      statusFilter,
-      "Active"
+    await userEvent.click(
+      screen.getByRole("button", { name: "All Status" })
     );
 
-    expect(
-      screen.getByText("Aarav Sharma")
-    ).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Active" })
+    );
 
-    expect(
-      screen.queryByText("Priya Iyer")
-    ).not.toBeInTheDocument();
+    expect(screen.getByText("Aarav Sharma")).toBeInTheDocument();
+    expect(screen.queryByText("Priya Iyer")).not.toBeInTheDocument();
   });
 
-  it(" should filter employees using department and role", async () => {
+  it("should filter employees using department and role", async () => {
     vi.mocked(getEmployees).mockResolvedValue([
       {
         id: "EMP001",
@@ -202,37 +186,28 @@ describe("Filter", () => {
       </MemoryRouter>
     );
 
-    const departmentFilter =
-      screen.getByDisplayValue("All Departments");
-
-    const roleFilter =
-      screen.getByDisplayValue("All Roles");
-
-    await userEvent.selectOptions(
-      departmentFilter,
-      "Engineering"
+    await userEvent.click(
+      screen.getByRole("button", { name: "All Departments" })
     );
 
-    await userEvent.selectOptions(
-      roleFilter,
-      "Frontend Developer"
+    await userEvent.click(
+      screen.getByRole("button", { name: "Engineering" })
     );
 
-    expect(
-      screen.getByText("Aarav Sharma")
-    ).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "All Roles" })
+    );
 
-    expect(
-      screen.queryByText("Karthik Rao")
-    ).not.toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Frontend Developer" })
+    );
 
-    expect(
-      screen.queryByText("Priya Iyer")
-    ).not.toBeInTheDocument();
+    expect(screen.getByText("Aarav Sharma")).toBeInTheDocument();
+    expect(screen.queryByText("Karthik Rao")).not.toBeInTheDocument();
+    expect(screen.queryByText("Priya Iyer")).not.toBeInTheDocument();
   });
 
-
-  it(" should filter employees using department, role and status", async () => {
+  it("should filter employees using department, role and status", async () => {
     vi.mocked(getEmployees).mockResolvedValue([
       {
         id: "EMP001",
@@ -275,41 +250,33 @@ describe("Filter", () => {
       </MemoryRouter>
     );
 
-    const departmentFilter =
-      screen.getByDisplayValue("All Departments");
-
-    const roleFilter =
-      screen.getByDisplayValue("All Roles");
-
-    const statusFilter =
-      screen.getByDisplayValue("All Status");
-
-    await userEvent.selectOptions(
-      departmentFilter,
-      "Engineering"
+    await userEvent.click(
+      screen.getByRole("button", { name: "All Departments" })
     );
 
-    await userEvent.selectOptions(
-      roleFilter,
-      "Frontend Developer"
+    await userEvent.click(
+      screen.getByRole("button", { name: "Engineering" })
     );
 
-    await userEvent.selectOptions(
-      statusFilter,
-      "Active"
+    await userEvent.click(
+      screen.getByRole("button", { name: "All Roles" })
     );
 
-    expect(
-      screen.getByText("Aarav Sharma")
-    ).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Frontend Developer" })
+    );
 
-    expect(
-      screen.queryByText("Karthik Rao")
-    ).not.toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "All Status" })
+    );
 
-    expect(
-      screen.queryByText("Priya Iyer")
-    ).not.toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Active" })
+    );
+
+    expect(screen.getByText("Aarav Sharma")).toBeInTheDocument();
+    expect(screen.queryByText("Karthik Rao")).not.toBeInTheDocument();
+    expect(screen.queryByText("Priya Iyer")).not.toBeInTheDocument();
   });
 
   it("should display no results when filters have no matching employees", async () => {
@@ -333,12 +300,12 @@ describe("Filter", () => {
       </MemoryRouter>
     );
 
-    const departmentFilter =
-      screen.getByDisplayValue("All Departments");
+    await userEvent.click(
+      screen.getByRole("button", { name: "All Departments" })
+    );
 
-    await userEvent.selectOptions(
-      departmentFilter,
-      "Engineering"
+    await userEvent.click(
+      screen.getByRole("button", { name: "Engineering" })
     );
 
     expect(
@@ -378,34 +345,26 @@ describe("Filter", () => {
       </MemoryRouter>
     );
 
-    const departmentFilter =
-      screen.getByDisplayValue("All Departments");
-
-    await userEvent.selectOptions(
-      departmentFilter,
-      "Engineering"
+    await userEvent.click(
+      screen.getByRole("button", { name: "All Departments" })
     );
 
-    expect(
-      screen.getByText("Aarav Sharma")
-    ).toBeInTheDocument();
-
-    expect(
-      screen.queryByText("Priya Iyer")
-    ).not.toBeInTheDocument();
-
-    await userEvent.selectOptions(
-      departmentFilter,
-      ""
+    await userEvent.click(
+      screen.getByRole("button", { name: "Engineering" })
     );
 
-    expect(
-      screen.getByText("Aarav Sharma")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Aarav Sharma")).toBeInTheDocument();
+    expect(screen.queryByText("Priya Iyer")).not.toBeInTheDocument();
 
-    expect(
-      screen.getByText("Priya Iyer")
-    ).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Engineering" })
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "All Departments" })
+    );
+
+    expect(screen.getByText("Aarav Sharma")).toBeInTheDocument();
+    expect(screen.getByText("Priya Iyer")).toBeInTheDocument();
   });
-
 });

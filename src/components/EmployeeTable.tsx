@@ -5,6 +5,7 @@ import type { Employee } from "../types/employee";
 import { getEmployees, deleteEmployee } from "../services/employeeService";
 import Pagination from "./Pagination";
 import EmptyState from "./EmptyState";
+import DeleteConfirmation from "./DeleteConfirmation";
 
 
 interface EmployeeTableProps {
@@ -30,6 +31,7 @@ function EmployeeTable({
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(null);
   const employeesPerPage = 10;
 
  useEffect(() => {
@@ -106,6 +108,7 @@ const currentEmployees = sortedEmployees.slice(
 const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
 
   return (
+   <>
    <section id="employees" className="employee-table">
       <h2>EMPLOYEE DETAILS</h2>
 
@@ -132,20 +135,20 @@ const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
               <td>{employee.status}</td>
               <td>{employee.joiningDate}</td>
               <td>
-                <button onClick={() => navigate(`/employees/${employee.id}`)}>View</button>
-                <button onClick={() =>navigate(`/employees/${employee.id}/edit`)}>Edit</button>
-                <button onClick={async () => { 
-                  const confirmed = window.confirm(`Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`);
-                 if (confirmed) {
-                  await deleteEmployee(employee);
-                  
-                  const updatedEmployees = employees.filter((item) => item.id !== employee.id);
-                  setEmployees(updatedEmployees);
-                  const newTotalPages = Math.ceil(updatedEmployees.length / employeesPerPage);
-                  if (currentPage > newTotalPages && newTotalPages > 0) {
-                    setCurrentPage(newTotalPages);
-                  }}
-                  }}>
+               <button className="view-button"
+               onClick={() => navigate(`/employees/${employee.id}`)}>
+                View
+                </button>
+
+                <button
+                className="edit-button"
+                onClick={() => navigate(`/employees/${employee.id}/edit`)}>
+                  Edit
+                  </button>
+
+                  <button
+                  className="delete-button"
+                  onClick={() => setEmployeeToDelete(employee)}>
                     Delete
                     </button>
                       </td>
@@ -166,6 +169,32 @@ const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
                         totalPages={totalPages}
                         onPageChange={setCurrentPage}/>
                         </section>
-                        );
-                      }
-export default EmployeeTable;
+                        {employeeToDelete && (
+                          <DeleteConfirmation
+                          employeeName={`${employeeToDelete.firstName} ${employeeToDelete.lastName}`}
+                          onCancel={() => setEmployeeToDelete(null)}
+                          onConfirm={async () => {
+                            const employee = employeeToDelete;
+                            if (!employee) {
+                              return;
+                            }
+
+                            await deleteEmployee(employee);
+
+                            const updatedEmployees = employees.filter(
+                              (item) => item.id !== employee.id);
+                              setEmployees(updatedEmployees);
+                              const newTotalPages = Math.ceil(
+                                updatedEmployees.length / employeesPerPage);
+
+                                if (currentPage > newTotalPages && newTotalPages > 0) {
+                                  setCurrentPage(newTotalPages);
+                                }
+                                setEmployeeToDelete(null);
+                              }}
+                              />
+                              )}
+                              </>
+                              );
+                            }
+                            export default EmployeeTable;

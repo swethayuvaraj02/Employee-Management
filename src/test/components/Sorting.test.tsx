@@ -54,9 +54,13 @@ describe("Sorting", () => {
       </MemoryRouter>
     );
 
-    const sortBy = screen.getByDisplayValue("Sort By");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Sort By" })
+    );
 
-    await userEvent.selectOptions(sortBy, "name");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Name" })
+    );
 
     await waitFor(() => {
       const rows = screen.getAllByRole("row");
@@ -66,7 +70,7 @@ describe("Sorting", () => {
       expect(rows[3]).toHaveTextContent("Zara Sharma");
     });
   });
-  
+
   it("should sort employees by name in descending order", async () => {
     vi.mocked(getEmployees).mockResolvedValue([
       {
@@ -110,11 +114,21 @@ describe("Sorting", () => {
       </MemoryRouter>
     );
 
-    const sortBy = screen.getByDisplayValue("Sort By");
-    const sortOrder = screen.getByDisplayValue("Ascending");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Sort By" })
+    );
 
-    await userEvent.selectOptions(sortBy, "name");
-    await userEvent.selectOptions(sortOrder, "Descending");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Name" })
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Ascending" })
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Descending" })
+    );
 
     await waitFor(() => {
       const rows = screen.getAllByRole("row");
@@ -124,7 +138,7 @@ describe("Sorting", () => {
       expect(rows[3]).toHaveTextContent("Aarav Iyer");
     });
   });
-  
+
   it("should sort employees by joining date", async () => {
     vi.mocked(getEmployees).mockResolvedValue([
       {
@@ -168,11 +182,18 @@ describe("Sorting", () => {
       </MemoryRouter>
     );
 
-const sortBy = screen.getByDisplayValue("Sort By");
-const sortOrder = screen.getByDisplayValue("Ascending");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Sort By" })
+    );
 
-await userEvent.selectOptions(sortBy, "joiningDate");
-await userEvent.selectOptions(sortOrder, "Ascending");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Joining Date" })
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Ascending" })
+    );
+
     await waitFor(() => {
       const rows = screen.getAllByRole("row");
 
@@ -181,7 +202,7 @@ await userEvent.selectOptions(sortOrder, "Ascending");
       expect(rows[3]).toHaveTextContent("Aarav Sharma");
     });
   });
-  
+
   it("should sort employees by department", async () => {
     vi.mocked(getEmployees).mockResolvedValue([
       {
@@ -225,13 +246,19 @@ await userEvent.selectOptions(sortOrder, "Ascending");
       </MemoryRouter>
     );
 
-const sortBy = screen.getByDisplayValue("Sort By");
-const sortOrder = screen.getByDisplayValue("Ascending");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Sort By" })
+    );
 
-await userEvent.selectOptions(sortBy, "department");
-await userEvent.selectOptions(sortOrder, "Ascending");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Department" })
+    );
 
-await waitFor(() => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "Ascending" })
+    );
+
+    await waitFor(() => {
       const rows = screen.getAllByRole("row");
 
       expect(rows[1]).toHaveTextContent("Design");
@@ -239,7 +266,7 @@ await waitFor(() => {
       expect(rows[3]).toHaveTextContent("Finance");
     });
   });
-  
+
   it("should sort employees by status", async () => {
     vi.mocked(getEmployees).mockResolvedValue([
       {
@@ -283,11 +310,17 @@ await waitFor(() => {
       </MemoryRouter>
     );
 
-const sortBy = screen.getByDisplayValue("Sort By");
-const sortOrder = screen.getByDisplayValue("Ascending");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Sort By" })
+    );
 
-await userEvent.selectOptions(sortBy, "status");
-await userEvent.selectOptions(sortOrder, "Ascending");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Status" })
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Ascending" })
+    );
 
     await waitFor(() => {
       const rows = screen.getAllByRole("row");

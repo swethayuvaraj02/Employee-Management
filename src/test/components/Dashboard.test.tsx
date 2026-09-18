@@ -104,56 +104,59 @@ describe("Dashboard", () => {
     });
   });
 
-  it("should display the correct active employee count", async () => {
-    vi.mocked(getEmployees).mockResolvedValue([
-      {
-        id: "EMP001",
-        firstName: "Aarav",
-        lastName: "Sharma",
-        email: "aarav@example.com",
-        phone: "9876543210",
-        department: "Engineering",
-        role: "Frontend Developer",
-        status: "Active",
-        joiningDate: "2024-01-15",
-      },
-      {
-        id: "EMP002",
-        firstName: "Priya",
-        lastName: "Iyer",
-        email: "priya@example.com",
-        phone: "9876543211",
-        department: "Design",
-        role: "UI/UX Designer",
-        status: "Active",
-        joiningDate: "2023-08-21",
-      },
-      {
-        id: "EMP003",
-        firstName: "Rahul",
-        lastName: "Verma",
-        email: "rahul@example.com",
-        phone: "9876543212",
-        department: "Engineering",
-        role: "Backend Developer",
-        status: "Inactive",
-        joiningDate: "2022-11-10",
-      },
-    ]);
+ it("should display the correct active employee count", async () => {
+  vi.mocked(getEmployees).mockResolvedValue([
+    {
+      id: "EMP001",
+      firstName: "Aarav",
+      lastName: "Sharma",
+      email: "aarav@example.com",
+      phone: "9876543210",
+      department: "Engineering",
+      role: "Frontend Developer",
+      status: "Active",
+      joiningDate: "2024-01-15",
+    },
+    {
+      id: "EMP002",
+      firstName: "Priya",
+      lastName: "Iyer",
+      email: "priya@example.com",
+      phone: "9876543211",
+      department: "Design",
+      role: "UI/UX Designer",
+      status: "Active",
+      joiningDate: "2023-08-21",
+    },
+    {
+      id: "EMP003",
+      firstName: "Rahul",
+      lastName: "Verma",
+      email: "rahul@example.com",
+      phone: "9876543212",
+      department: "Engineering",
+      role: "Backend Developer",
+      status: "Inactive",
+      joiningDate: "2022-11-10",
+    },
+  ]);
 
-    render(
-      <MemoryRouter>
-        <Dashboard />
-      </MemoryRouter>
-    );
+  render(
+    <MemoryRouter>
+      <Dashboard />
+    </MemoryRouter>
+  );
 
-    const activeCard = await screen
-      .findByText("Active Employees")
-      .then((element) => element.parentElement);
+  const activeCard = await screen
+    .findByText("Active Employees")
+    .then((element) => element.parentElement);
 
-    expect(activeCard).toHaveTextContent("Active Employees");
+  expect(activeCard).toHaveTextContent("Active Employees");
+
+  await waitFor(() => {
     expect(activeCard).toHaveTextContent("2");
   });
+});
 
   it("should display the correct inactive employee count", async () => {
     vi.mocked(getEmployees).mockResolvedValue([

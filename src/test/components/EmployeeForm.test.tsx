@@ -23,14 +23,16 @@ describe("EmployeeForm", () => {
       </MemoryRouter>
     );
 
-    const addButton = screen.getByRole("button", {
-      name: "Add Employee",
-    });
-
-    await user.click(addButton);
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
 
     expect(
-      screen.getByRole("button", { name: "Add Employee" })
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
     ).toBeInTheDocument();
   });
 
@@ -58,17 +60,40 @@ describe("EmployeeForm", () => {
     );
 
     await user.click(
-      screen.getByRole("button", { name: "Add Employee" })
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
     );
 
-    const textboxes = screen.getAllByRole("textbox");
+    await user.type(
+      screen.getByLabelText("First Name"),
+      "John"
+    );
 
-    await user.type(textboxes[0], "John");
-    await user.type(textboxes[1], "Doe");
-    await user.type(textboxes[2], "john@example.com");
-    await user.type(textboxes[3], "9876543210");
-    await user.type(textboxes[4], "Engineering");
-    await user.type(textboxes[5], "Software Engineer");
+    await user.type(
+      screen.getByLabelText("Last Name"),
+      "Doe"
+    );
+
+    await user.type(
+      screen.getByLabelText("Email"),
+      "john@example.com"
+    );
+
+    await user.type(
+      screen.getByLabelText("Phone"),
+      "9876543210"
+    );
+
+    await user.selectOptions(
+      screen.getByLabelText("Department"),
+      "Engineering"
+    );
+
+    await user.selectOptions(
+      screen.getByLabelText("Role"),
+      "Software Engineer"
+    );
 
     const dateInput = document.querySelector(
       'input[type="date"]'
@@ -77,7 +102,9 @@ describe("EmployeeForm", () => {
     await user.type(dateInput, "2024-01-15");
 
     await user.click(
-      screen.getByRole("button", { name: "Add Employee" })
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
     );
 
     expect(createEmployee).toHaveBeenCalledWith(
@@ -93,233 +120,367 @@ describe("EmployeeForm", () => {
       })
     );
   });
+
   it("should show a validation error when first name is empty", async () => {
-  vi.mocked(getEmployees).mockResolvedValue([]);
+    vi.mocked(getEmployees).mockResolvedValue([]);
 
-  const user = userEvent.setup();
+    const user = userEvent.setup();
 
-  render(
-    <MemoryRouter>
-      <Dashboard />
-    </MemoryRouter>
-  );
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
 
-  await user.click(
-    screen.getByRole("button", { name: "Add Employee" })
-  );
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
 
-  const textboxes = screen.getAllByRole("textbox");
+    await user.type(
+      screen.getByLabelText("Last Name"),
+      "Doe"
+    );
 
-  await user.type(textboxes[1], "Doe");
-  await user.type(textboxes[2], "john@example.com");
-  await user.type(textboxes[3], "9876543210");
-  await user.type(textboxes[4], "Engineering");
-  await user.type(textboxes[5], "Software Engineer");
+    await user.type(
+      screen.getByLabelText("Email"),
+      "john@example.com"
+    );
 
-  const dateInput = document.querySelector(
-    'input[type="date"]'
-  ) as HTMLInputElement;
+    await user.type(
+      screen.getByLabelText("Phone"),
+      "9876543210"
+    );
 
-  await user.type(dateInput, "2024-01-15");
+    await user.selectOptions(
+      screen.getByLabelText("Department"),
+      "Engineering"
+    );
 
-  await user.click(
-    screen.getByRole("button", { name: "Add Employee" })
-  );
+    await user.selectOptions(
+      screen.getByLabelText("Role"),
+      "Software Engineer"
+    );
 
-  expect(
-    screen.getByText("Please fill in all fields.")
-  ).toBeInTheDocument();
-});
+    const dateInput = document.querySelector(
+      'input[type="date"]'
+    ) as HTMLInputElement;
 
-it("should show a validation error when last name is empty", async () => {
-  vi.mocked(getEmployees).mockResolvedValue([]);
+    await user.type(dateInput, "2024-01-15");
 
-  const user = userEvent.setup();
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
 
-  render(
-    <MemoryRouter>
-      <Dashboard />
-    </MemoryRouter>
-  );
+    expect(
+      screen.getByText("Please fill in all fields.")
+    ).toBeInTheDocument();
+  });
 
-  await user.click(
-    screen.getByRole("button", { name: "Add Employee" })
-  );
+  it("should show a validation error when last name is empty", async () => {
+    vi.mocked(getEmployees).mockResolvedValue([]);
 
-  const textboxes = screen.getAllByRole("textbox");
+    const user = userEvent.setup();
 
-  await user.type(textboxes[0], "John");
-  await user.type(textboxes[2], "john@example.com");
-  await user.type(textboxes[3], "9876543210");
-  await user.type(textboxes[4], "Engineering");
-  await user.type(textboxes[5], "Software Engineer");
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
 
-  const dateInput = document.querySelector(
-    'input[type="date"]'
-  ) as HTMLInputElement;
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
 
-  await user.type(dateInput, "2024-01-15");
+    await user.type(
+      screen.getByLabelText("First Name"),
+      "John"
+    );
 
-  await user.click(
-    screen.getByRole("button", { name: "Add Employee" })
-  );
+    await user.type(
+      screen.getByLabelText("Email"),
+      "john@example.com"
+    );
 
-  expect(
-    screen.getByText("Please fill in all fields.")
-  ).toBeInTheDocument();
-});
+    await user.type(
+      screen.getByLabelText("Phone"),
+      "9876543210"
+    );
 
-it("should show a validation error when email is invalid", async () => {
-  vi.mocked(getEmployees).mockResolvedValue([]);
+    await user.selectOptions(
+      screen.getByLabelText("Department"),
+      "Engineering"
+    );
 
-  const user = userEvent.setup();
+    await user.selectOptions(
+      screen.getByLabelText("Role"),
+      "Software Engineer"
+    );
 
-  render(
-    <MemoryRouter>
-      <Dashboard />
-    </MemoryRouter>
-  );
+    const dateInput = document.querySelector(
+      'input[type="date"]'
+    ) as HTMLInputElement;
 
-  await user.click(
-    screen.getByRole("button", { name: "Add Employee" })
-  );
+    await user.type(dateInput, "2024-01-15");
 
-  const textboxes = screen.getAllByRole("textbox");
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
 
-  await user.type(textboxes[0], "John");
-  await user.type(textboxes[1], "Doe");
-  await user.type(textboxes[2], "john@example");
-  await user.type(textboxes[3], "9876543210");
-  await user.type(textboxes[4], "Engineering");
-  await user.type(textboxes[5], "Software Engineer");
+    expect(
+      screen.getByText("Please fill in all fields.")
+    ).toBeInTheDocument();
+  });
 
-  const dateInput = document.querySelector(
-    'input[type="date"]'
-  ) as HTMLInputElement;
+  it("should show a validation error when email is invalid", async () => {
+    vi.mocked(getEmployees).mockResolvedValue([]);
 
-  await user.type(dateInput, "2024-01-15");
+    const user = userEvent.setup();
 
-  await user.click(
-    screen.getByRole("button", { name: "Add Employee" })
-  );
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
 
-  expect(
-    screen.getByText("Please enter a valid email address.")
-  ).toBeInTheDocument();
-});
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
 
+    await user.type(
+      screen.getByLabelText("First Name"),
+      "John"
+    );
 
-it("should show a validation error when phone number is invalid", async () => {
-  vi.mocked(getEmployees).mockResolvedValue([]);
+    await user.type(
+      screen.getByLabelText("Last Name"),
+      "Doe"
+    );
 
-  const user = userEvent.setup();
+    await user.type(
+      screen.getByLabelText("Email"),
+      "john@example"
+    );
 
-  render(
-    <MemoryRouter>
-      <Dashboard />
-    </MemoryRouter>
-  );
+    await user.type(
+      screen.getByLabelText("Phone"),
+      "9876543210"
+    );
 
-  await user.click(
-    screen.getByRole("button", { name: "Add Employee" })
-  );
+    await user.selectOptions(
+      screen.getByLabelText("Department"),
+      "Engineering"
+    );
 
-  const textboxes = screen.getAllByRole("textbox");
+    await user.selectOptions(
+      screen.getByLabelText("Role"),
+      "Software Engineer"
+    );
 
-  await user.type(textboxes[0], "John");
-  await user.type(textboxes[1], "Doe");
-  await user.type(textboxes[2], "john@example.com");
-  await user.type(textboxes[3], "invalid phone");
-  await user.type(textboxes[4], "Engineering");
-  await user.type(textboxes[5], "Software Engineer");
+    const dateInput = document.querySelector(
+      'input[type="date"]'
+    ) as HTMLInputElement;
 
-  const dateInput = document.querySelector(
-    'input[type="date"]'
-  ) as HTMLInputElement;
+    await user.type(dateInput, "2024-01-15");
 
-  await user.type(dateInput, "2024-01-15");
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
 
-  await user.click(
-    screen.getByRole("button", { name: "Add Employee" })
-  );
+    expect(
+      screen.getByText("Please enter a valid email address.")
+    ).toBeInTheDocument();
+  });
 
-  expect(
-    screen.getByText("Please enter the valid phone number")
-  ).toBeInTheDocument();
-});
+  it("should show a validation error when phone number is invalid", async () => {
+    vi.mocked(getEmployees).mockResolvedValue([]);
 
-it("should show a validation error when the department field is lfet empty", async () => {
-  vi.mocked(getEmployees).mockResolvedValue([]);
+    const user = userEvent.setup();
 
-  const user = userEvent.setup();
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
 
-  render(
-    <MemoryRouter>
-      <Dashboard />
-    </MemoryRouter>
-  );
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
 
-  await user.click(
-    screen.getByRole("button", { name: "Add Employee" })
-  );
+    await user.type(
+      screen.getByLabelText("First Name"),
+      "John"
+    );
 
-  const textboxes = screen.getAllByRole("textbox");
+    await user.type(
+      screen.getByLabelText("Last Name"),
+      "Doe"
+    );
 
-  await user.type(textboxes[0], "John");
-  await user.type(textboxes[1], "Doe");
-  await user.type(textboxes[2], "john@example.com");
-  await user.type(textboxes[3], "9876543210");
-  await user.type(textboxes[5], "Software Engineer");
+    await user.type(
+      screen.getByLabelText("Email"),
+      "john@example.com"
+    );
 
-  const dateInput = document.querySelector(
-    'input[type="date"]'
-  ) as HTMLInputElement;
+    await user.type(
+      screen.getByLabelText("Phone"),
+      "invalid phone"
+    );
 
-  await user.type(dateInput, "2024-01-15");
+    await user.selectOptions(
+      screen.getByLabelText("Department"),
+      "Engineering"
+    );
 
-  await user.click(
-    screen.getByRole("button", { name: "Add Employee" })
-  );
+    await user.selectOptions(
+      screen.getByLabelText("Role"),
+      "Software Engineer"
+    );
 
-  expect(
-    screen.getByText("Please fill in all fields.")
-  ).toBeInTheDocument();
-});
+    const dateInput = document.querySelector(
+      'input[type="date"]'
+    ) as HTMLInputElement;
 
-it("should close the form when Cancel is clicked without saving changes", async () => {
-  vi.mocked(getEmployees).mockResolvedValue([]);
+    await user.type(dateInput, "2024-01-15");
 
-  const user = userEvent.setup();
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
 
-  render(
-    <MemoryRouter>
-      <Dashboard />
-    </MemoryRouter>
-  );
+    expect(
+      screen.getByText("Please enter a valid phone number.")
+    ).toBeInTheDocument();
+  });
 
-  await user.click(
-    screen.getByRole("button", { name: "Add Employee" })
-  );
+  it("should show a validation error when the department field is left empty", async () => {
+    vi.mocked(getEmployees).mockResolvedValue([]);
 
-  const textboxes = screen.getAllByRole("textbox");
+    const user = userEvent.setup();
 
-  await user.type(textboxes[0], "John");
-  await user.type(textboxes[1], "Doe");
-  await user.type(textboxes[2], "john@example.com");
-  await user.type(textboxes[3], "9876543210");
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
 
-  await user.click(
-    screen.getByRole("button", { name: "Cancel" })
-  );
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
 
-  expect(
-    screen.queryByRole("button", { name: "Cancel" })
-  ).not.toBeInTheDocument();
+    await user.type(
+      screen.getByLabelText("First Name"),
+      "John"
+    );
 
-  expect(
-    screen.getByRole("button", { name: "Add Employee" })
-  ).toBeInTheDocument();
-});
+    await user.type(
+      screen.getByLabelText("Last Name"),
+      "Doe"
+    );
 
+    await user.type(
+      screen.getByLabelText("Email"),
+      "john@example.com"
+    );
 
+    await user.type(
+      screen.getByLabelText("Phone"),
+      "9876543210"
+    );
+
+    // Department intentionally left empty
+
+    await user.selectOptions(
+      screen.getByLabelText("Role"),
+      "Software Engineer"
+    );
+
+    const dateInput = document.querySelector(
+      'input[type="date"]'
+    ) as HTMLInputElement;
+
+    await user.type(dateInput, "2024-01-15");
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
+
+    expect(
+      screen.getByText("Please fill in all fields.")
+    ).toBeInTheDocument();
+  });
+
+  it("should close the form when Cancel is clicked without saving changes", async () => {
+    vi.mocked(getEmployees).mockResolvedValue([]);
+
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    );
+
+    await user.type(
+      screen.getByLabelText("First Name"),
+      "John"
+    );
+
+    await user.type(
+      screen.getByLabelText("Last Name"),
+      "Doe"
+    );
+
+    await user.type(
+      screen.getByLabelText("Email"),
+      "john@example.com"
+    );
+
+    await user.type(
+      screen.getByLabelText("Phone"),
+      "9876543210"
+    );
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Cancel",
+      })
+    );
+
+    expect(
+      screen.queryByRole("button", {
+        name: "Cancel",
+      })
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByRole("button", {
+        name: "Add Employee",
+      })
+    ).toBeInTheDocument();
+  });
 });

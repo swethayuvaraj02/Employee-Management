@@ -240,9 +240,17 @@ describe("Pagination", () => {
 
     expect(screen.getByText("Employee21 Test")).toBeInTheDocument();
 
-    const departmentFilter = screen.getAllByRole("combobox")[0];
+    const departmentFilter = screen.getByRole("button", {
+  name: "All Departments",
+});
 
-    await user.selectOptions(departmentFilter, "Engineering");
+await user.click(departmentFilter);
+
+await user.click(
+  screen.getByRole("button", {
+    name: "Engineering",
+  })
+);
 
     expect(screen.getByText("Employee1 Test")).toBeInTheDocument();
     expect(screen.queryByText("Employee21 Test")).not.toBeInTheDocument();

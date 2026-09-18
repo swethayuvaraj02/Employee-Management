@@ -65,17 +65,19 @@ function Dashboard() {
   />
 )}
 
-<section className="search-filter">
+<section className="stat-cards">
   <StatCard title="Total Employees" value={employees.length} />
   <StatCard title="Departments" value={Departments} />
   <StatCard title="Active Employees" value={activeEmployees} />
   <StatCard title="Inactive Employees" value={inactiveEmployees} />
   </section>
       
-     <SearchBar
-  searchTerm={searchTerm}
-  onSearch={setSearchTerm}
-/>
+    <div className="search-section">
+  <SearchBar
+    searchTerm={searchTerm}
+    onSearch={setSearchTerm}
+  />
+</div>
      <FilterPanel
   department={department}
   onDepartmentChange={setDepartment}

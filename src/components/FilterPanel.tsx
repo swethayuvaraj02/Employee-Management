@@ -1,14 +1,120 @@
+import { useEffect, useRef, useState } from "react";
+
 interface FilterPanelProps {
   department: string;
   onDepartmentChange: (value: string) => void;
   role: string;
   onRoleChange: (value: string) => void;
-   status: string;
+  status: string;
   onStatusChange: (value: string) => void;
   sortBy: string;
-onSortByChange: (value: string) => void;
-sortOrder: string;
-onSortOrderChange: (value: string) => void;
+  onSortByChange: (value: string) => void;
+  sortOrder: string;
+  onSortOrderChange: (value: string) => void;
+}
+
+interface CustomDropdownProps {
+  value: string;
+  options: string[];
+  placeholder: string;
+  onChange: (value: string) => void;
+}
+
+function CustomDropdown({
+  value,
+  options,
+  placeholder,
+  onChange,
+}: CustomDropdownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleDropdown = () => {
+    if (!isOpen) {
+      const rect = dropdownRef.current?.getBoundingClientRect();
+
+      if (rect) {
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+
+        const estimatedMenuHeight = options.length * 40 + 20;
+
+        setOpenUpward(
+          spaceBelow < estimatedMenuHeight &&
+            spaceAbove > spaceBelow
+        );
+      }
+    }
+
+    setIsOpen((prev) => !prev);
+  };
+
+  const selectOption = (option: string) => {
+    onChange(option);
+    setIsOpen(false);
+  };
+
+  return (
+  <div
+    ref={dropdownRef}
+    className={`custom-dropdown ${
+      openUpward ? "open-upward" : ""
+    }`}
+  >
+    <button
+      type="button"
+      className="custom-dropdown-trigger"
+      onClick={toggleDropdown}
+    >
+      <span>{value || placeholder}</span>
+      <span className={`dropdown-arrow ${isOpen ? "open" : ""}`} />
+    </button>
+
+    {isOpen && (
+      <div className="custom-dropdown-menu">
+        {value && (
+          <button
+            type="button"
+            onClick={() => selectOption("")}
+          >
+            {placeholder}
+          </button>
+        )}
+
+        {options
+          .filter((option) => option !== value)
+          .map((option) => (
+            <button
+              type="button"
+              key={option}
+              onClick={() => selectOption(option)}
+            >
+              {option}
+            </button>
+          ))}
+      </div>
+    )}
+  </div>
+);
 }
 
 function FilterPanel({
@@ -23,66 +129,100 @@ function FilterPanel({
   sortOrder,
   onSortOrderChange,
 }: FilterPanelProps) {
-  
+  const departments = [
+    "Engineering",
+    "Design",
+    "HR",
+    "Marketing",
+    "Finance",
+    "Sales",
+  ];
+
+  const roles = [
+    "Frontend Developer",
+    "Backend Developer",
+    "Full Stack Developer",
+    "UI/UX Designer",
+    "Product Designer",
+    "HR Executive",
+    "Recruiter",
+    "Marketing Specialist",
+    "Financial Analyst",
+    "Sales Executive",
+  ];
+
+  const statuses = [
+    "Active",
+    "Inactive",
+  ];
+
+  const sortOptions = [
+    "Name",
+    "Joining Date",
+    "Department",
+    "Status",
+  ];
+
+  const sortOrders = [
+    "Ascending",
+    "Descending",
+  ];
 
   return (
     <div className="filter-panel">
 
-      <select
+      {/* Department */}
+      <CustomDropdown
         value={department}
-        onChange={(event)=>onDepartmentChange(event.target.value)}
-      >
-        <option value="">All Departments</option>
-        <option value="Engineering">Engineering</option>
-        <option value="Design">Design</option>
-        <option value="HR">HR</option>
-        <option value="Marketing">Marketing</option>
-        <option value="Finance">Finance</option>
-        <option value="Sales">Sales</option>
-      </select>
+        options={departments}
+        placeholder="All Departments"
+        onChange={onDepartmentChange}
+      />
 
-      <select
+      {/* Role */}
+      <CustomDropdown
         value={role}
-        onChange={(event) => onRoleChange(event.target.value)}
-      >
-        <option value="">All Roles</option>
-        <option value="Frontend Developer">Frontend Developer</option>
-        <option value="Backend Developer">Backend Developer</option>
-        <option value="Full Stack Developer">Full Stack Developer</option>
-        <option value="UI/UX Designer">UI/UX Designer</option>
-        <option value="Product Designer">Product Designer</option>
-        <option value="HR Executive">HR Executive</option>
-        <option value="Recruiter">Recruiter</option>
-        <option value="Marketing Specialist">Marketing Specialist</option>
-        <option value="Financial Analyst">Financial Analyst</option>
-        <option value="Sales Executive">Sales Executive</option>
-      </select>
+        options={roles}
+        placeholder="All Roles"
+        onChange={onRoleChange}
+      />
 
-      <select value={status} onChange={(event)=> onStatusChange(event.target.value)}>
-        <option value="">All Status</option>
-        <option value="Active">Active</option>
-        <option value="Inactive">Inactive</option>
-      </select>
+      {/* Status */}
+      <CustomDropdown
+        value={status}
+        options={statuses}
+        placeholder="All Status"
+        onChange={onStatusChange}
+      />
 
-      <select
-  value={sortBy}
-  onChange={(event) => onSortByChange(event.target.value)}
->
-  <option value="">Sort By</option>
-  <option value="name">Name</option>
-  <option value="joiningDate">Joining Date</option>
-  <option value="department">Department</option>
-  <option value="status">Status</option>
-</select>
+      {/* Sort By */}
+      <CustomDropdown
+        value={sortBy}
+        options={sortOptions}
+        placeholder="Sort By"
+        onChange={(value) => {
+          const sortValue =
+            value === "Name"
+              ? "name"
+              : value === "Joining Date"
+              ? "joiningDate"
+              : value === "Department"
+              ? "department"
+              : value === "Status"
+              ? "status"
+              : "";
 
-      <select
-  value={sortOrder}
-  onChange={(event) => onSortOrderChange(event.target.value)}
->
-         <option value="">Sort Order</option>
-         <option value="Ascending">Ascending</option>
-        <option value="Descending">Descending</option>
-      </select>
+          onSortByChange(sortValue);
+        }}
+      />
+
+      {/* Sort Order */}
+      <CustomDropdown
+        value={sortOrder}
+        options={sortOrders}
+        placeholder="Sort Order"
+        onChange={onSortOrderChange}
+      />
 
     </div>
   );
