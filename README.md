@@ -1,6 +1,6 @@
 ## Live Demo
 
-🌐 [Main Live Demo]([YOUR_OLD_VERCEL_URL](https://employee-management-three-gamma.vercel.app/))
+🌐 [Main Live Demo](https://employee-management-three-gamma.vercel.app/)
 
 🎨 [Frontend Improvements Demo]([https://employee-management-git-fronte-ec8f80-swethas-projects-02278241.vercel.app/](https://employee-management-git-fronte-ec8f80-swethas-projects-02278241.vercel.app/))
 
