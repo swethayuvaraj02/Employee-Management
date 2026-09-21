@@ -129,10 +129,23 @@ const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
           {currentEmployees.length > 0 ? (
             currentEmployees.map((employee) => (
             <tr key={employee.id}>
-              <td>{employee.firstName} {employee.lastName}</td>
+             <td>
+  <div className="employee-info">
+    <span className="employee-name">
+      {employee.firstName} {employee.lastName}
+    </span>
+    <span className="employee-id">
+      {employee.id}
+    </span>
+  </div>
+</td>
               <td>{employee.department}</td>
               <td>{employee.role}</td>
-              <td>{employee.status}</td>
+             <td>
+              <span className={`table-status ${employee.status.toLowerCase()}`}>
+                {employee.status}
+                </span>
+                </td>
               <td>{employee.joiningDate}</td>
               <td>
                <button className="view-button"

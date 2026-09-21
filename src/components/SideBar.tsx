@@ -1,9 +1,12 @@
+import { NavLink } from "react-router-dom";
+
 interface SidebarProps {
   onMenuClick: () => void;
   isOpen: boolean;
 }
 
 function Sidebar({ onMenuClick, isOpen }: SidebarProps) {
+
   return (
     <aside className={`sidebar ${isOpen ? "open" : ""}`}>
       <div className="mobile-menu">
@@ -13,16 +16,26 @@ function Sidebar({ onMenuClick, isOpen }: SidebarProps) {
       </div>
 
       <nav>
-        <ul>
-          <li>
-              <a href="/">Dashboard</a>
-          </li>
+  <ul>
+    <li>
+     <NavLink
+  to="/#top"
+  className={({ isActive }) => (isActive ? "active" : "")}
+>
+  Dashboard
+</NavLink>
+    </li>
 
-          <li>
-           <a href="#employees">Employees</a>
-          </li>
-        </ul>
-      </nav>
+    <li>
+      <NavLink
+  to="/employees#employees"
+  className={({ isActive }) => (isActive ? "active" : "")}
+>
+  Employees
+</NavLink>
+    </li>
+  </ul>
+</nav>
     </aside>
   );
 }

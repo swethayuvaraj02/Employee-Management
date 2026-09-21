@@ -22,11 +22,12 @@ function App() {
   />
 
   <Routes>
-    <Route path="/" element={<Dashboard />} />
-    <Route path="/employees" element={<Dashboard />} />
-    <Route path="/employees/:id" element={<EmployeeDetails />} />
-    <Route path="/employees/:id/edit" element={<EditEmployee />} />
-  </Routes>
+  <Route path="/" element={<Dashboard />} />
+  <Route path="/employees" element={<Dashboard />} />
+  <Route path="/employees/add" element={<Dashboard />} />
+  <Route path="/employees/:id" element={<EmployeeDetails />} />
+  <Route path="/employees/:id/edit" element={<EditEmployee />} />
+</Routes>
 </div>
       </div>
     </BrowserRouter>
