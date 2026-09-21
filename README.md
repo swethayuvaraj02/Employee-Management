@@ -2,7 +2,7 @@
 
 🌐 [Main Live Demo](https://employee-management-three-gamma.vercel.app/)
 
-🎨 [Frontend Improvements Demo]([https://employee-management-git-fronte-ec8f80-swethas-projects-02278241.vercel.app/](https://employee-management-git-fronte-ec8f80-swethas-projects-02278241.vercel.app/))
+🎨 [Frontend Improvements Demo](https://employee-management-git-fronte-ec8f80-swethas-projects-02278241.vercel.app/)
 
 # React + TypeScript + Vite
 
